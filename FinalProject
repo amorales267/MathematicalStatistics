@@ -1,0 +1,461 @@
+---
+title: "2012 NYC Public Schools SAT Scores"
+output:
+  ioslides_presentation: default
+  beamer_presentation: default
+---
+
+```{r, echo=FALSE}
+setwd("~/R") #sets working directory
+SAT<-read.csv("SAT2012 - M.csv",header=T) #calls on SAT2012 - M file
+attach(SAT)
+number.of.taker<-subset(SAT,select=Num.of.SAT.Test.Takers,subset=School.Type=="public",drop=T) # subset of number of SAT taker l
+reading.avg<-subset(SAT,select=SAT.Critical.Reading.Avg..Score,subset=School.Type=="public",drop=T)# subset of SAT Reading Scores 
+math.avg<-subset(SAT,select=SAT.Math.Avg..Score,subset=School.Type=="public",drop=T)# subset of SAT Math Scores 
+
+total.avg<-subset(SAT,select=CR.and.M.Total.Average,subset=School.Type=="public",drop=T) #subset of Total SAT scores( Math +reading)
+####subsets of boroughs
+BK<-subset(SAT,select=CR.and.M.Total.Average,subset=Borough=="Brooklyn",drop=T) # subset of Brookyln SAT scores
+MH<-subset(SAT,select=CR.and.M.Total.Average,subset=Borough=="Manhattan",drop=T)# subset of Mahattan SAT scores
+BX<-subset(SAT,select=CR.and.M.Total.Average,subset=Borough=="The Bronx",drop=T)# subset of Bronx SAT scores
+QU<-subset(SAT,select=CR.and.M.Total.Average,subset=Borough=="Queens",drop=T)# subset of Queens SAT scores
+CS<-subset(SAT,select=CR.and.M.Total.Average,subset=Borough=="Staten Island",drop=T) #subset of Staten Island SAT Scores
+```
+
+## Do New York City Public Schools properly prepare students for the SAT?
+
+- Most colleges across the United States require or at least "recommend" taking the SAT for admission into their school. 
+
+- For this analysis, we will take a look at the performance of students who attended NYC Public Schools and took the SAT in 2012. 
+
+- Using a sample size of 421 schools, we will dive into the performance of high schools across our 5 boroughs. 
+
+##Questions and Hypothesis
+-Do NYC public High schools prepare students to attend CUNY's four year colleges?
+
+-Which borough prepared its students the most, and which borough prepared its students the least for colleges?
+
+-Are students do well in SAT math portion also do well on overall scores?
+
+-Is there any ability gap between math and reading?
+
+## CUNY Admission Profile: Freshman Fall 2013 (CR + M) (thewcs.org)
+
+Baruch------------    1258           
+Brooklyn----------   1150            
+CCNY---------------    1192            
+Sophie Davis----    1323            
+CSI------------------    1102         
+Hunter------------    1218            
+John Jay------------     971           
+Lehman-----------    1028          
+Maccaulay-------    1405              
+Medgar Evers----     802           
+NYCCT---------------    873           
+Queens-----------   1145          
+York-----------------     881            
+
+Average Score of 1103
+
+## Average SAT scores in NYC
+
+Average SAT scores of staten Island
+```{r, echo=FALSE}
+#Staten Island
+
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(CS),sd(CS)) #mean of the  total SAT average scores from a normal distribition
+s<-rnorm(421,mean(CS),sd(CS)) #standard deviation of the  total SAT average scores from a normal distribition
+
+#begins for loop taking on sample size of 421
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(CS),sd(CS)) 
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #provides lower limit of the mean in total average scores
+U<-x.bar+1.96*s/ sqrt(421) #provides upper limit of the mean in  total average  scores
+c(min(L),max(U)) # 95% of confidence interval for the mean in total SAT average scores
+#Mean of Staten Island schools around (878,955)
+```
+Average SAT scores of Queens
+```{r, echo=FALSE}
+#Queens
+
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(QU),sd(QU)) #mean of the  total SAT average scores from normal distribition
+s<-rnorm(421,mean(QU),sd(QU)) #standard deviation of the  total SAT average scores from normal distribition
+
+#begins for loop taking on sample size of 421
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(QU),sd(QU))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in total average scores
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in  total average  scores
+c(min(L),max(U)) # 95% of confidence interval for the mean in total SAT average scores
+# Mean of Queens schools around (831,895)
+```
+Average SAT scores of Manhattan
+```{r, echo=FALSE}
+#Manhattan
+
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(MH),sd(MH)) #mean of the  total SAT average scores from normal distribition
+s<-rnorm(421,mean(MH),sd(MH)) #standard deviation of the  total SAT average scores from normal distribition
+
+#begins for loop taking on sample size of 421
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(MH),sd(MH))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in total average scores
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in  total average  scores
+c(min(L),max(U)) # 95% of confidence interval for the mean in total SAT average scores
+# Mean of Manhattan schools around (785,911)
+
+```
+Average SAT scores of Brooklyn
+```{r,echo=F}
+#Brooklyn
+
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(BK),sd(BK)) #mean of the  total SAT average scores from normal distribition
+s<-rnorm(421,mean(BK),sd(BK)) #standard deviation of the  total SAT average scores from normal distribition
+
+#begins for loop taking on sample size of 421
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(BK),sd(BK))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in total average scores
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in  total average  scores
+c(min(L),max(U)) # 95% of confidence interval for the mean in total SAT average scores
+# Mean of Brooklyn schools around (761,812)
+```
+
+##Total Average SAT scores of NYC
+Average SAT scores of Bronx
+```{r, echo=FALSE}
+#The Bronx 
+
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(BX),sd(BX)) #mean of the  total SAT average scores from normal distribition
+s<-rnorm(421,mean(BX),sd(BX)) #standard deviation of the  total SAT average scores from normal distribition
+
+#begins for loop taking on sample size of 421
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(BX),sd(BX))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in total average scores
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in  total average  scores
+c(min(L),max(U)) # 95% of confidence interval for the mean in total SAT average scores
+# Mean of Bronx Schools around (741,794)
+```
+
+Total Average SAT scores of NYC
+```{r, echo=FALSE}
+t.test(total.avg,conf.level=.95)  #### 95% of total SAT mean=(802.9055 825.4318), based on the result most are unable to attend most CUNY Schools except Medgar Evers. Results are generated from a t distribution test with 95% of confidence interval. We use a t test becuase the variance of the population is unknown.
+```
+
+
+
+# Elementary Descriptive Analysis of Reading Scores
+
+##Basic Statistics
+
+Minumum Score:
+```{r, echo=FALSE}
+min(reading.avg) #Minumum SAT Reading Score of the sample schools
+```
+Maximum Score:
+```{r, echo=FALSE}
+max(reading.avg)#Maximum SAT Reading Score of the sample schools
+```
+Average Score:
+```{r, echo=FALSE}
+mean(reading.avg)#mean of the SAT Reading Score  from the sample schools
+```
+Standard Deviation of Reading Scores:
+```{r, echo=FALSE}
+sd(reading.avg) #standard deviation of SAT reading scores 
+```
+
+## Histogram
+
+```{r histogram,echo=FALSE}
+hist(reading.avg,main="SAT reading average scores") #The histogram shows that the reading average is a right skewed distribution.
+```
+
+## Boxplot
+
+```{r boxplot,echo=FALSE}
+boxplot(reading.avg,main="SAT reading average scores") #boxplot of Reading Scores
+```
+
+##QQplot
+
+```{r qqplot,echo=FALSE}
+qqnorm(reading.avg,main="SAT reading average scores") 
+qqline(reading.avg,main="SAT reading average scores") #qqplot of Reading Scores
+```
+
+# Inferential Statistics of Reading Scores
+
+##Bootstrap of Reading Scores
+```{r bootstrap,echo=FALSE}
+#Bootstrap 
+
+N<-10^4 #begins normal distribution
+RDA<-rnorm(421,mean(reading.avg),sd(reading.avg)) #ramdom sample size of 421
+my.boot<-numeric(N)
+#for loop for bootstrap of  100 reading average scores 
+for (i in 1:N) {
+  RDA.sample<-sample(RDA,421,replace=T)
+  my.boot[i]<-mean(RDA.sample)
+}
+hist(RDA,main="SAT reading average scores") #histogram of bootstrap
+
+lines(seq(197.7,511.1,1),dnorm(seq(197.7,511.1,1),mean(reading.avg),sd(reading.avg))*20000) #Normal curve
+# when the samples of the SAT reading average  scores are large, its distribution is  close to normal distribution.
+```
+
+##Confidence Interval of Reading Scores
+
+Mean of SAT Reading Scores taken from a Normal Distribution
+```{r Confidence Intervals,echo=FALSE}
+### 95% Of confidence interval for the mean of average reading score, when the standard deviation of the population is unknown
+N<-10^4
+x.bar<-rnorm(421,mean(reading.avg),sd(reading.avg)) #mean of the  SAT reading average scores from normal distribition
+mean(x.bar) #mean of x.bar
+```
+Standard Deviation of SAT reading scores taken from a Normal Distribution
+```{r,echo=FALSE}
+s<-rnorm(421,mean(reading.avg),sd(reading.avg))#Standard deviation of the   SAT reading average scores from normal distribition
+sd(x.bar) #standard deviation
+```
+
+Interval for a Confidence Interval of 95%
+```{r,echo=FALSE}
+#for loop that runs 10^4 times
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(reading.avg),sd(reading.avg))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in average reading score
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in average reading score
+c(min(L),max(U)) # 95% of confidence interval for the mean in average reading score
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Elementary Descriptive Analysis of Math Scores
+
+##Basic Statistics
+```{r, echo=FALSE}
+math.avg<-subset(SAT,select=SAT.Math.Avg..Score,subset=School.Type=="public",drop=T) #subset of Math Scores
+```
+Minumum Score:
+```{r, echo=FALSE}
+min(math.avg) #minumum Math Score
+```
+Maximum Score:
+```{r, echo=FALSE}
+max(math.avg) #maximum Math Score
+``` 
+Average Score:
+```{r, echo=FALSE}
+mean(math.avg) #Average of Math Scores
+```
+Standard Deviation of Reading Scores:
+```{r, echo=FALSE}
+sd(math.avg) #standard deviation of Math Scores
+```
+
+## Histogram
+
+```{r histogram m,echo=FALSE}
+hist(math.avg,main="SAT Math average scores") #histogram of Math Scores
+```
+
+## Boxplot
+
+```{r boxplot m,echo=FALSE}
+boxplot(math.avg,main="SAT Math average scores") #boxplot of Math Scores
+```
+
+##QQplot
+
+```{r qqplot m,echo=FALSE}
+qqnorm(math.avg,main="SAT Math average scores")
+qqline(math.avg,main="SAT Math average scores") #qqplot of Math Scores
+```
+
+# Inferential Statistics of Math Scores
+
+##Bootstrap of Math Scores
+```{r bootstrap m,echo=FALSE}
+N<-10^4 #begins normal distribution
+MDA<-rnorm(421,mean(math.avg),sd(math.avg)) #ramdom sample size of 421
+my.boot<-numeric(N)
+
+#for loop for bootstrap of 421 Math Scores 
+for (i in 1:N) {
+  MDA.sample<-sample(MDA,421,replace=T)
+  my.boot[i]<-mean(MDA.sample)
+}
+hist(MDA,main="SAT Math average scores") #histogram of bootstrap of Math Scores
+
+lines(seq(197.7,511.1,1),dnorm(seq(197.7,511.1,1),mean(math.avg),sd(math.avg))*20000) #Normal curve
+# when the samples of the SAT math average  scores are large, its distribution is close to normal distribution.
+```
+
+##Confidence Interval of Math Scores
+
+Mean of SAT Math Scores taken from a Normal Distribution
+```{r Confidence Intervals m,echo=FALSE}
+### 95% Of confidence interval for the mean of average Math score, when the standard deviation of the population is unknown
+N<-10^4 #begins normal distribution
+x.bar<-rnorm(421,mean(math.avg),sd(math.avg)) #mean of the  SAT Math average scores from normal distribition
+mean(x.bar)
+```
+Standard Deviation of SAT Math scores taken from a Normal Distribution
+```{r,echo=FALSE}
+s<-rnorm(421,mean(math.avg),sd(math.avg)) #Standard deviation of SAT Math average scores from normal distribition
+sd(x.bar) #standard deviation
+```
+
+Interval for a Confidence Interval of 95%
+```{r,echo=FALSE}
+#for loop that runs 10^4 times
+for (i in 1:10^4)
+{
+  x<-rnorm(421,mean(math.avg),sd(math.avg))
+  x.bar[i]<-mean(x)
+  s[i]<-sd(x)
+}
+L<-x.bar-1.96*s/ sqrt(421)  #lower limit of the mean in average reading score
+U<-x.bar+1.96*s/ sqrt(421) #upper limit of the mean in average reading score
+c(min(L),max(U)) # 95% of confidence interval for the mean in average reading score
+```
+
+#Math and Reading Scores
+
+##Bootstrapped Ratio of Means
+
+```{r, echo=FALSE}
+N<-10^4 #begins normal distribution
+ratio.mean<-numeric(N)
+#for loop for the bootstrap of the  ratio of means
+for (i in 1:N)
+{ RD.sample<-sample(reading.avg,421,replace=T) #Reading sample
+MA.sample<-sample(math.avg,421,replace=T) #Math sample
+ratio.mean[i]<-mean(RD.sample)/mean(MA.sample) #ratio of means
+}
+
+hist(ratio.mean, main="bootstrap distribution of ratio of means") # histogram of bootstrap distribution of ratio of means
+#since the shape of the histogram is almost symmetric, it it close to normal distribution
+abline(v=mean(ratio.mean,col="yellow",Ity=2)) #vertical line at the mean  of the ratio mean
+dev.new() # open new graphics device
+#qqplot
+qqnorm(ratio.mean) # points for the ratio means
+qqline(ratio.mean) # striaght line that matches the points
+#the qqplot shows that the ratio mean is normally distributed, since the striaght line matches the points
+
+mean(ratio.mean) # mean of  sample ratio means
+sd(ratio.mean) #standard deviation of  sample ratio means
+quantile(ratio.mean,c(0.025,0.975)) #95% confidence interval for the bootstraped ratio of means
+# we are 95% confident that the true mean of average reading scores is between 0.9302482 and 1.0096246 times less than the average math scores.
+```
+##Linear Graph of Math score vs Total score
+```{r, echo = F}
+plot(math.avg,total.avg,pch=21,col="red",bg="black", main="SAT average math scores versus Total SAT Average scores")
+model<-lm(total.avg~math.avg) # mode of SAT average math scores versus Total SAT Average scores
+abline(model,col="green") # add a straight line
+```
+
+##r^2 = coefficient of determination
+r^2=coefficient of determination
+```{r, echo = F}
+
+sse<-deviance(lm(total.avg~math.avg)) #Sum of Squared Residuals( measure of unexplained variation)
+sst<-deviance(lm(total.avg~1))#total sum of squares(measure of total variation )
+
+ssr<-sst-sse #sum of squares regression (measure of explained variance)
+r.square<-ssr/sst #r^2=coefficient of determination
+r.square#r^2=coefficient of determination
+```
+##equation.of.least.square.line
+
+slope
+```{r, echo = F}
+x.bar<-mean(math.avg) # mean of SAT average Math scores
+y.bar<-mean(total.avg)#mean of Total SAT average scores
+
+sxx<-var(math.avg)#variance of SAT average Math scores
+syy<-var(total.avg)#variance of total SAT average scores
+sxy<-var(math.avg,total.avg)# covariance of SAT average math scores and Total SAT Average scores
+slope<-sxy/sxx  # slope of the least-squares line
+slope
+```
+
+Intercept
+```{r, echo = F}
+
+intercept<-y.bar-slope*x.bar# intercept of the least-squares line
+intercept #calls intercept
+```
+equation.of.least.sqaure.line<-intercept+slope*x 
+```{r, echo = F}
+x<-math.avg #independent variable
+equation.of.least.sqaure.line<-intercept+slope*x #equation of least square line
+```
+##Residuals Plot 
+```{r, echo = F}
+model<-lm(total.avg~math.avg)
+windows() # jump out a window
+par(mfrow=c(2,2)) # slit the size of the window
+plot(model)##residuals plot 
+```
+
+##95% of confidence intervals of true slope beta(¦Â) 
+95% of confidence intervals of ture slope
+```{r, echo = F}
+confint(model)# 95% of confidence intervals for the estimated parameters from the model
+#95% of confidence intervals for the the true slope beta(¦Â) is (2.493,2.651)
+```
+##Conclusion 
+The average SAT scores for NYC Public schools fall between 802.9 and 825.4.
+
+Based on the average scores, NYC Public schools do not prepare students to attend most of the CUNY Colleges, but they are able to get accepted into Medgar Evers College. 
+
+The schools in Staten Island have the highest average SAT score, and schools in The Bronx have the lowest average SAT score.
+
+Most students in Brooklyn and Bronx are not able to go to CUNY¡¯s four year colleges due to low SAT test scores.
+
+Students who did well on the SAT Math portion, also did well on overall scores.
+
+Most students'SAT math scores is slightly higher than reading scores.
